@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <title>PG CRM</title>
+    <link rel="stylesheet" href="styles.css" />
+</head>
+
+<body>
+    <h1>PG Guests</h1>
+
+    <form id="guest-form">
+        <input type="hidden" id="guest-id" />
+        <div>
+            <label>Name:</label>
+            <input type="text" id="name" required />
+        </div>
+        <div>
+            <label>Room:</label>
+            <input type="text" id="roomNumber" required />
+        </div>
+        <div>
+            <label>Phone:</label>
+            <input type="text" id="phone" />
+        </div>
+        <div>
+            <label>Amount Due:</label>
+            <input type="number" id="amountDue" value="0" />
+        </div>
+        <button type="submit">Save</button>
+        <button type="button" id="cancel-edit" style="display:none;">Cancel Edit</button>
+    </form>
+
+    <h2>Guest List</h2>
+    <table border="1">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Room</th>
+                <th>Phone</th>
+                <th>Amount Due</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody id="guest-table-body">
+            <!-- rows will be added by JS -->
+        </tbody>
+    </table>
+
+    <script src="main.js"></script>
+</body>
+
+</html>
