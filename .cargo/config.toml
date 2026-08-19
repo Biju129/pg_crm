@@ -1,0 +1,10 @@
+[build]
+# Use a target directory without spaces to avoid MinGW ld.exe path issues
+# (username "Biju K" contains a space which breaks GCC/ld.exe)
+target-dir = "C:/pgcrm_build"
+
+[target.x86_64-pc-windows-gnu]
+# C:\pgsc is a junction pointing to the rustup self-contained bin dir (no spaces)
+# The dlltool.exe there has been replaced with LLVM-MinGW's working dlltool
+linker = "C:/pgsc/x86_64-w64-mingw32-gcc.exe"
+ar = "C:/pgbin/llvm-ar.exe"

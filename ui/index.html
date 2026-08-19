@@ -3,192 +3,538 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>PG CRM Desktop Application</title>
+  <title>PG CRM — Project RAM V1 Management Suite</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <!-- Sidebar -->
-  <aside class="sidebar">
-    <div>
-      <div class="brand">
-        <div class="brand-icon">PG</div>
-        <div class="brand-title">PG CRM</div>
-      </div>
-      <ul class="nav-list">
-        <li class="nav-item active" data-tab="guests">Guests Management</li>
-        <li class="nav-item" data-tab="rooms">Rooms & Occupancy</li>
-        <li class="nav-item" data-tab="auth">Users & Security</li>
-      </ul>
-    </div>
-    <div class="db-status">
-      <span class="status-dot"></span>
-      <span>PostgreSQL Active</span>
-    </div>
-  </aside>
-
-  <!-- Main Content Area -->
-  <main class="main-content">
-    <header class="header">
-      <h1 id="page-title">Guest Dashboard</h1>
-      <span style="color: var(--text-muted); font-size: 0.9rem;">Rust Desktop Engine v0.1.0</span>
-    </header>
-
-    <!-- Stats Row -->
-    <section class="stats-grid">
-      <div class="stat-card">
-        <span class="stat-label">Total Guests</span>
-        <span class="stat-value" id="stat-total-guests">0</span>
-      </div>
-      <div class="stat-card">
-        <span class="stat-label">Active Rooms</span>
-        <span class="stat-value" id="stat-active-rooms">0</span>
-      </div>
-      <div class="stat-card">
-        <span class="stat-label">Total Amount Due</span>
-        <span class="stat-value" id="stat-total-due">₹0.00</span>
-      </div>
-    </section>
-
-    <!-- TAB: GUESTS -->
-    <div id="tab-guests" class="tab-content">
-      <div class="grid-container">
-        <!-- Guest Form -->
-        <div class="card">
-          <h2 class="card-title" id="form-title">Add New Guest</h2>
-          <form id="guest-form">
-            <input type="hidden" id="guest-id">
-            <div class="form-group">
-              <label for="name">Guest Name</label>
-              <input type="text" id="name" placeholder="e.g. John Doe" required>
-            </div>
-            <div class="form-group">
-              <label for="roomNumber">Room Number</label>
-              <input type="text" id="roomNumber" placeholder="e.g. 101" required>
-            </div>
-            <div class="form-group">
-              <label for="phone">Phone Number</label>
-              <input type="text" id="phone" placeholder="e.g. +91 9876543210">
-            </div>
-            <div class="form-group">
-              <label for="monthlyRent">Monthly Rent (₹)</label>
-              <input type="number" id="monthlyRent" value="0">
-            </div>
-            <div class="form-group">
-              <label for="advanceAmount">Advance Paid (₹)</label>
-              <input type="number" id="advanceAmount" value="0">
-            </div>
-            <div class="form-group">
-              <label for="amountDue">Amount Due (₹)</label>
-              <input type="number" id="amountDue" value="0">
-            </div>
-            <div class="btn-group">
-              <button type="submit" class="btn btn-primary" id="save-btn">Save Guest</button>
-              <button type="button" class="btn btn-secondary" id="cancel-btn" style="display:none;">Cancel</button>
-            </div>
-          </form>
+  <div class="app-layout">
+    <!-- Sidebar Navigation -->
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <div class="brand-logo">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+            <polyline points="9 22 9 12 15 12 15 22"/>
+          </svg>
         </div>
-
-        <!-- Guest List Table -->
-        <div class="card">
-          <h2 class="card-title">Guest Registry</h2>
-          <div class="table-responsive">
-            <table>
-              <thead>
-                <tr>
-                  <th>Name</th>
-                  <th>Room</th>
-                  <th>Phone</th>
-                  <th>Rent (₹)</th>
-                  <th>Due (₹)</th>
-                  <th>Actions</th>
-                </tr>
-              </thead>
-              <tbody id="guest-table-body">
-                <!-- Rows dynamically rendered -->
-              </tbody>
-            </table>
-          </div>
+        <div class="brand-info">
+          <span class="brand-title">Project RAM</span>
+          <span class="brand-subtitle">PG CRM Engine V1</span>
         </div>
       </div>
-    </div>
 
-    <!-- TAB: ROOMS -->
-    <div id="tab-rooms" class="tab-content" style="display:none;">
-      <div class="grid-container">
-        <!-- Room Form -->
-        <div class="card">
-          <h2 class="card-title">Add Room</h2>
-          <form id="room-form">
-            <input type="hidden" id="room-id">
-            <div class="form-group">
-              <label for="room-number">Room Number</label>
-              <input type="text" id="room-number" placeholder="e.g. 201" required>
+      <nav class="sidebar-nav">
+        <div class="nav-section-title">Core Operations</div>
+        <a class="nav-link active" data-tab="dashboard">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/></svg>
+          <span>Dashboard</span>
+        </a>
+        <a class="nav-link" data-tab="rooms">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 21h18M3 7v14M21 7v14M6 21V11m12 10V11M9 3h6v4H9z"/></svg>
+          <span>Rooms & Occupancy</span>
+        </a>
+        <a class="nav-link" data-tab="enrollment">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/><polyline points="17 11 19 13 23 9"/></svg>
+          <span>Tenant Enrollment</span>
+        </a>
+
+        <div class="nav-section-title">Financials</div>
+        <a class="nav-link" data-tab="ledger">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+          <span>Rent Ledger & Dues</span>
+        </a>
+        <a class="nav-link" data-tab="receipts">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+          <span>Receipts Registry</span>
+        </a>
+
+        <div class="nav-section-title">Automation & Security</div>
+        <a class="nav-link" data-tab="reminders">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+          <span>WhatsApp Reminders</span>
+        </a>
+        <a class="nav-link" data-tab="security">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+          <span>User Accounts</span>
+        </a>
+      </nav>
+
+      <div class="sidebar-footer">
+        <div class="status-indicator online">
+          <span class="pulse-dot"></span>
+          <span>PostgreSQL Active</span>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main Workspace -->
+    <main class="main-container">
+      <header class="top-header">
+        <div class="header-title">
+          <h1 id="page-title">Dashboard Overview</h1>
+          <p id="page-subtitle">Real-time occupancy, revenue tracking, and automated reminders</p>
+        </div>
+        <div class="header-actions">
+          <button class="btn btn-secondary" onclick="runReminderCycle()">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"/></svg>
+            <span>Run Reminders</span>
+          </button>
+          <button class="btn btn-primary" onclick="switchTab('enrollment')">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            <span>New Tenant Enrollment</span>
+          </button>
+        </div>
+      </header>
+
+      <!-- Global Notification Toast Bar -->
+      <div id="toast-container" class="toast-container"></div>
+
+      <div class="content-body">
+        <!-- ================= TAB 1: DASHBOARD ================= -->
+        <div id="tab-dashboard" class="tab-pane active">
+          <!-- Metric Cards Grid -->
+          <div class="metrics-grid">
+            <div class="metric-card cyan">
+              <div class="metric-icon">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+              </div>
+              <div class="metric-content">
+                <span class="metric-label">Active Tenants</span>
+                <span class="metric-value" id="stat-active-tenants">0</span>
+                <span class="metric-sub" id="stat-pending-enrollments">0 pending verification</span>
+              </div>
             </div>
-            <div class="form-group">
-              <label for="room-capacity">Capacity</label>
-              <input type="number" id="room-capacity" value="2" min="1" required>
+
+            <div class="metric-card emerald">
+              <div class="metric-icon">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 21h18M3 7v14M21 7v14M6 21V11m12 10V11M9 3h6v4H9z"/></svg>
+              </div>
+              <div class="metric-content">
+                <span class="metric-label">Total Rooms / Capacity</span>
+                <span class="metric-value" id="stat-room-capacity">0 / 0</span>
+                <span class="metric-sub" id="stat-available-spaces">0 available spaces</span>
+              </div>
             </div>
-            <div class="btn-group">
-              <button type="submit" class="btn btn-primary">Save Room</button>
+
+            <div class="metric-card amber">
+              <div class="metric-icon">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+              </div>
+              <div class="metric-content">
+                <span class="metric-label">Pending Dues</span>
+                <span class="metric-value" id="stat-pending-dues">₹0.00</span>
+                <span class="metric-sub" id="stat-overdue-count">0 overdue items</span>
+              </div>
             </div>
-          </form>
+
+            <div class="metric-card purple">
+              <div class="metric-icon">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+              </div>
+              <div class="metric-content">
+                <span class="metric-label">Monthly Revenue Collected</span>
+                <span class="metric-value" id="stat-revenue">₹0.00</span>
+                <span class="metric-sub">Across active ledgers</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Dashboard Grid: Recent Enrollments & Quick Ledger -->
+          <div class="dashboard-grid">
+            <div class="card grid-col-8">
+              <div class="card-header">
+                <h3>Recent Tenant Enrollments</h3>
+                <button class="btn btn-sm btn-outline" onclick="switchTab('enrollment')">View All</button>
+              </div>
+              <div class="table-container">
+                <table class="data-table">
+                  <thead>
+                    <tr>
+                      <th>Tenant Code</th>
+                      <th>Full Name</th>
+                      <th>Contact</th>
+                      <th>Room</th>
+                      <th>Advance Paid</th>
+                      <th>Enrollment Status</th>
+                      <th>Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody id="dash-enrollments-body">
+                    <!-- Loaded dynamically -->
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <div class="card grid-col-4">
+              <div class="card-header">
+                <h3>Quick Action Panel</h3>
+              </div>
+              <div class="quick-actions-list">
+                <div class="quick-action-item" onclick="switchTab('enrollment')">
+                  <div class="action-icon cyan"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/></svg></div>
+                  <div class="action-text">
+                    <strong>Enroll New Tenant</strong>
+                    <span>Record details, room & initial fees</span>
+                  </div>
+                </div>
+
+                <div class="quick-action-item" onclick="switchTab('rooms')">
+                  <div class="action-icon emerald"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 21h18M3 7v14M21 7v14"/></svg></div>
+                  <div class="action-text">
+                    <strong>Add / Configure Rooms</strong>
+                    <span>Set floors, capacity & monthly rates</span>
+                  </div>
+                </div>
+
+                <div class="quick-action-item" onclick="switchTab('ledger')">
+                  <div class="action-icon amber"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></div>
+                  <div class="action-text">
+                    <strong>Record Rent Payment</strong>
+                    <span>Update ledger & issue official receipt</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
 
-        <!-- Room List Table -->
-        <div class="card">
-          <h2 class="card-title">Rooms Overview</h2>
-          <div class="table-responsive">
-            <table>
-              <thead>
-                <tr>
-                  <th>Room No.</th>
-                  <th>Capacity</th>
-                  <th>Occupied</th>
-                  <th>Status</th>
-                  <th>Actions</th>
-                </tr>
-              </thead>
-              <tbody id="room-table-body">
-                <!-- Rows dynamically rendered -->
-              </tbody>
-            </table>
+        <!-- ================= TAB 2: ROOMS & OCCUPANCY ================= -->
+        <div id="tab-rooms" class="tab-pane">
+          <div class="section-toolbar">
+            <div class="search-box">
+              <input type="text" id="room-search-input" placeholder="Search by room number..." onkeyup="filterRooms()">
+            </div>
+            <button class="btn btn-primary" onclick="openRoomModal()">+ Add New Room</button>
+          </div>
+
+          <div class="rooms-grid" id="rooms-grid-container">
+            <!-- Rendered dynamically -->
+          </div>
+        </div>
+
+        <!-- ================= TAB 3: TENANT ENROLLMENT ================= -->
+        <div id="tab-enrollment" class="tab-pane">
+          <div class="dashboard-grid">
+            <!-- Form Card -->
+            <div class="card grid-col-5">
+              <div class="card-header">
+                <h3>New Tenant Enrollment</h3>
+                <span class="badge badge-warning">Status: PENDING_PAYMENT</span>
+              </div>
+              <form id="enrollment-form" onsubmit="handleTenantEnrollment(event)">
+                <div class="form-group">
+                  <label>Full Name *</label>
+                  <input type="text" id="enroll-fullname" placeholder="e.g. Rahul Sharma" required>
+                </div>
+                <div class="form-row">
+                  <div class="form-group">
+                    <label>WhatsApp / Mobile *</label>
+                    <input type="text" id="enroll-contact" placeholder="+91 9876543210" required>
+                  </div>
+                  <div class="form-group">
+                    <label>Email Address</label>
+                    <input type="email" id="enroll-email" placeholder="rahul@example.com">
+                  </div>
+                </div>
+                <div class="form-row">
+                  <div class="form-group">
+                    <label>Joining Date *</label>
+                    <input type="date" id="enroll-date" required>
+                  </div>
+                  <div class="form-group">
+                    <label>Assign Available Room *</label>
+                    <select id="enroll-room-id" required onchange="onRoomSelectChange()"></select>
+                  </div>
+                </div>
+                <div class="form-row">
+                  <div class="form-group">
+                    <label>Occupation Type</label>
+                    <select id="enroll-occupation">
+                      <option value="Working Professional">Working Professional</option>
+                      <option value="Student">Student</option>
+                      <option value="Other">Other</option>
+                    </select>
+                  </div>
+                  <div class="form-group">
+                    <label>Company / College</label>
+                    <input type="text" id="enroll-org" placeholder="e.g. TCS / IIT">
+                  </div>
+                </div>
+                <div class="form-row">
+                  <div class="form-group">
+                    <label>Monthly Rent (₹) *</label>
+                    <input type="number" id="enroll-rent" value="8500" required onchange="calcTotalPayable()">
+                  </div>
+                  <div class="form-group">
+                    <label>Advance Amount (₹) *</label>
+                    <input type="number" id="enroll-advance" value="10000" required onchange="calcTotalPayable()">
+                  </div>
+                </div>
+                <div class="payable-banner">
+                  <span>Total Initial Payable:</span>
+                  <strong id="enroll-total-payable">₹18,500.00</strong>
+                </div>
+                <button type="submit" class="btn btn-primary btn-block">Submit Enrollment</button>
+              </form>
+            </div>
+
+            <!-- Enrollment Directory -->
+            <div class="card grid-col-7">
+              <div class="card-header">
+                <h3>Tenant Enrollment Registry</h3>
+                <div class="filter-pills">
+                  <span class="pill active" onclick="filterEnrollments('ALL')">All</span>
+                  <span class="pill" onclick="filterEnrollments('PENDING_PAYMENT')">Pending Payment</span>
+                  <span class="pill" onclick="filterEnrollments('ACTIVE')">Active</span>
+                </div>
+              </div>
+              <div class="table-container">
+                <table class="data-table">
+                  <thead>
+                    <tr>
+                      <th>Name / Code</th>
+                      <th>Contact</th>
+                      <th>Room</th>
+                      <th>Initial Payable</th>
+                      <th>Status</th>
+                      <th>Action</th>
+                    </tr>
+                  </thead>
+                  <tbody id="enrollment-table-body">
+                    <!-- Dynamically populated -->
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ================= TAB 4: RENT LEDGER & DUES ================= -->
+        <div id="tab-ledger" class="tab-pane">
+          <div class="section-toolbar">
+            <div class="filter-pills">
+              <span class="pill active" onclick="filterLedger('ALL')">All Ledger</span>
+              <span class="pill warning" onclick="filterLedger('OVERDUE')">Overdue</span>
+              <span class="pill info" onclick="filterLedger('PENDING')">Pending</span>
+              <span class="pill success" onclick="filterLedger('PAID')">Paid</span>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="table-container">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>Tenant ID</th>
+                    <th>Billing Month</th>
+                    <th>Due Date</th>
+                    <th>Rent Due (₹)</th>
+                    <th>Amount Paid (₹)</th>
+                    <th>Pending (₹)</th>
+                    <th>Status</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody id="ledger-table-body">
+                  <!-- Dynamically loaded -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- ================= TAB 5: RECEIPTS ================= -->
+        <div id="tab-receipts" class="tab-pane">
+          <div class="card">
+            <div class="card-header">
+              <h3>Official Receipts Registry</h3>
+            </div>
+            <div class="table-container">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>Receipt No.</th>
+                    <th>Tenant</th>
+                    <th>Payment Mode</th>
+                    <th>Amount Paid (₹)</th>
+                    <th>Issued At</th>
+                    <th>Print / View</th>
+                  </tr>
+                </thead>
+                <tbody id="receipts-table-body">
+                  <!-- Loaded dynamically -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- ================= TAB 6: WHATSAPP REMINDERS ================= -->
+        <div id="tab-reminders" class="tab-pane">
+          <div class="dashboard-grid">
+            <div class="card grid-col-4">
+              <div class="card-header">
+                <h3>Automated WhatsApp Engine</h3>
+              </div>
+              <div class="engine-box">
+                <p>The Reminder Engine checks due dates on the 7th, sends daily overdue reminders from the 8th onwards, and sends automated Welcome credentials upon payment verification.</p>
+                <div class="btn-group vertical">
+                  <button class="btn btn-primary" onclick="runReminderCycle()">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"/></svg>
+                    <span>Trigger Reminder Scan Now</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <div class="card grid-col-8">
+              <div class="card-header">
+                <h3>Queued & Sent Notifications</h3>
+              </div>
+              <div class="table-container">
+                <table class="data-table">
+                  <thead>
+                    <tr>
+                      <th>Type</th>
+                      <th>Channel</th>
+                      <th>Message Reference</th>
+                      <th>Status</th>
+                      <th>Date</th>
+                    </tr>
+                  </thead>
+                  <tbody id="notifications-table-body">
+                    <!-- Loaded dynamically -->
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ================= TAB 7: USER SECURITY ================= -->
+        <div id="tab-security" class="tab-pane">
+          <div class="card max-w-md">
+            <div class="card-header">
+              <h3>Create Admin / Caretaker Account</h3>
+            </div>
+            <form id="user-create-form" onsubmit="handleUserCreate(event)">
+              <div class="form-group">
+                <label>Login Username / Email</label>
+                <input type="text" id="user-login" placeholder="admin@pgcrm.local" required>
+              </div>
+              <div class="form-group">
+                <label>Password</label>
+                <input type="password" id="user-pass" required>
+              </div>
+              <div class="form-group">
+                <label>Role</label>
+                <select id="user-role-select">
+                  <option value="OWNER">OWNER</option>
+                  <option value="ADMIN">ADMIN</option>
+                </select>
+              </div>
+              <button type="submit" class="btn btn-primary">Create User Account</button>
+            </form>
           </div>
         </div>
       </div>
-    </div>
+    </main>
+  </div>
 
-    <!-- TAB: AUTH -->
-    <div id="tab-auth" class="tab-content" style="display:none;">
-      <div class="card" style="max-width: 450px;">
-        <h2 class="card-title">User Registration & Security</h2>
-        <form id="user-form">
+  <!-- MODALS -->
+  <!-- Modal: Verify & Activate Tenant -->
+  <div id="verify-modal" class="modal-overlay">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3>Verify Initial Payment & Activate Tenant</h3>
+        <button class="modal-close" onclick="closeModal('verify-modal')">&times;</button>
+      </div>
+      <div class="modal-body" id="verify-modal-body">
+        <!-- Rendered dynamically -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal: Pay Rent -->
+  <div id="pay-rent-modal" class="modal-overlay">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3>Record Rent Payment</h3>
+        <button class="modal-close" onclick="closeModal('pay-rent-modal')">&times;</button>
+      </div>
+      <div class="modal-body">
+        <form id="pay-rent-form" onsubmit="handlePayRent(event)">
+          <input type="hidden" id="pay-ledger-id">
           <div class="form-group">
-            <label for="user-name">Full Name</label>
-            <input type="text" id="user-name" placeholder="Admin Name" required>
+            <label>Amount to Pay (₹)</label>
+            <input type="number" id="pay-amount" required>
           </div>
           <div class="form-group">
-            <label for="user-email">Email Address</label>
-            <input type="email" id="user-email" placeholder="admin@pgcrm.local" required>
-          </div>
-          <div class="form-group">
-            <label for="user-password">Password</label>
-            <input type="password" id="user-password" required>
-          </div>
-          <div class="form-group">
-            <label for="user-role">Role</label>
-            <select id="user-role">
-              <option value="admin">Admin</option>
-              <option value="caretaker">Caretaker</option>
-              <option value="guest">Guest</option>
+            <label>Payment Method</label>
+            <select id="pay-method">
+              <option value="CASH">Cash Payment (Manual)</option>
+              <option value="ONLINE">Online Payment (UPI/Card)</option>
             </select>
           </div>
-          <div class="btn-group">
-            <button type="submit" class="btn btn-primary">Create User</button>
-          </div>
+          <button type="submit" class="btn btn-primary btn-block">Confirm Payment & Generate Receipt</button>
         </form>
       </div>
     </div>
-  </main>
+  </div>
+
+  <!-- Modal: Create/Edit Room -->
+  <div id="room-modal" class="modal-overlay">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3 id="room-modal-title">Add Room</h3>
+        <button class="modal-close" onclick="closeModal('room-modal')">&times;</button>
+      </div>
+      <div class="modal-body">
+        <form id="room-form" onsubmit="handleSaveRoom(event)">
+          <input type="hidden" id="room-modal-id">
+          <div class="form-group">
+            <label>Room Number *</label>
+            <input type="text" id="room-modal-number" placeholder="e.g. 101" required>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Floor Number</label>
+              <input type="number" id="room-modal-floor" value="1" required>
+            </div>
+            <div class="form-group">
+              <label>Capacity</label>
+              <input type="number" id="room-modal-capacity" value="2" min="1" required>
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Monthly Rent (₹)</label>
+            <input type="number" id="room-modal-rent" value="8500" required>
+          </div>
+          <button type="submit" class="btn btn-primary btn-block">Save Room</button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal: Receipt Printable Preview -->
+  <div id="receipt-modal" class="modal-overlay">
+    <div class="modal-card receipt-card-modal">
+      <div class="modal-header">
+        <h3>Official Payment Receipt</h3>
+        <button class="modal-close" onclick="closeModal('receipt-modal')">&times;</button>
+      </div>
+      <div class="modal-body" id="receipt-modal-body">
+        <!-- Rendered dynamically -->
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-primary" onclick="window.print()">Print Receipt</button>
+      </div>
+    </div>
+  </div>
 
   <script src="app.js"></script>
 </body>

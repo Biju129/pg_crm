@@ -2,7 +2,7 @@ use axum::{
     extract::{Path, State},
     http::StatusCode,
     response::{IntoResponse, Response},
-    routing::{get, post, put},
+    routing::{delete, get, post, put},
     Json, Router,
 };
 use std::sync::Arc;
@@ -15,8 +15,12 @@ use crate::models::enrollment_payment::RecordEnrollmentPaymentDto;
 use crate::models::guest::{CreateGuestDto, UpdateGuestDto};
 use crate::models::room::{CreateRoomDto, UpdateRoomDto};
 use crate::models::tenant::CreateTenantEnrollmentDto;
+use crate::models::tenant_document::UploadTenantDocumentDto;
 use crate::models::user::{LoginDto, RegisterUserDto};
-use crate::services::{AuthService, GuestService, RoomService, TenantService};
+use crate::services::{
+    ledger_service::PayRentDto, AuthService, DocumentService, GuestService, LedgerService,
+    ReceiptService, ReminderEngine, RoomService, TenantService,
+};
 
 #[derive(Clone)]
 pub struct ApiState {
@@ -27,16 +31,35 @@ pub async fn start_server(state: Arc<AppState>) -> Result<(), Box<dyn std::error
     let api_state = ApiState { app: state.clone() };
 
     let api_routes = Router::new()
+        // Auth
         .route("/auth/register", post(register))
         .route("/auth/login", post(login))
+        // Rooms
         .route("/rooms", get(list_rooms).post(create_room))
         .route("/rooms/:id", put(update_room).delete(delete_room))
+        // Guests (legacy support)
         .route("/guests", get(list_guests).post(create_guest))
         .route("/guests/:id", get(get_guest).put(update_guest).delete(delete_guest))
+        // Tenants & Enrollment
         .route("/tenants", get(list_tenants).post(enroll_tenant))
         .route("/tenants/:id", get(get_tenant))
         .route("/tenants/:id/payments", post(record_tenant_payment))
         .route("/tenants/:id/verify", post(verify_tenant))
+        // Documents (Proof attachments)
+        .route("/documents", post(upload_document))
+        .route("/documents/tenant/:id", get(list_tenant_documents))
+        .route("/documents/:id", delete(delete_document))
+        // Rent Ledger
+        .route("/ledger", get(list_ledger))
+        .route("/ledger/pay", post(pay_rent))
+        .route("/ledger/tenant/:id", get(get_tenant_ledger))
+        // Receipts
+        .route("/receipts", get(list_receipts))
+        .route("/receipts/:id", get(get_receipt))
+        .route("/receipts/tenant/:id", get(get_tenant_receipts))
+        // Reminder Engine & Notifications
+        .route("/reminders/run", post(run_reminders))
+        .route("/notifications", get(list_notifications))
         .with_state(api_state);
 
     let app = Router::new()
@@ -195,6 +218,84 @@ async fn verify_tenant(
 ) -> Result<Json<serde_json::Value>, ApiError> {
     let result = TenantService::verify_and_activate(&state.app.pool, id).await?;
     Ok(Json(serde_json::to_value(result).unwrap()))
+}
+
+async fn upload_document(
+    State(state): State<ApiState>,
+    Json(dto): Json<UploadTenantDocumentDto>,
+) -> Result<Json<serde_json::Value>, ApiError> {
+    let doc = DocumentService::upload_document(&state.app.pool, dto).await?;
+    Ok(Json(serde_json::to_value(doc).unwrap()))
+}
+
+async fn list_tenant_documents(
+    State(state): State<ApiState>,
+    Path(tenant_id): Path<Uuid>,
+) -> Result<Json<serde_json::Value>, ApiError> {
+    let docs = DocumentService::list_tenant_documents(&state.app.pool, tenant_id).await?;
+    Ok(Json(serde_json::to_value(docs).unwrap()))
+}
+
+async fn delete_document(
+    State(state): State<ApiState>,
+    Path(id): Path<Uuid>,
+) -> Result<Json<serde_json::Value>, ApiError> {
+    let success = DocumentService::delete_document(&state.app.pool, id).await?;
+    Ok(Json(serde_json::json!({ "success": success })))
+}
+
+async fn list_ledger(State(state): State<ApiState>) -> Result<Json<serde_json::Value>, ApiError> {
+    let ledger = LedgerService::list_all_ledgers(&state.app.pool).await?;
+    Ok(Json(serde_json::to_value(ledger).unwrap()))
+}
+
+async fn pay_rent(
+    State(state): State<ApiState>,
+    Json(dto): Json<PayRentDto>,
+) -> Result<Json<serde_json::Value>, ApiError> {
+    let res = LedgerService::pay_rent(&state.app.pool, dto).await?;
+    Ok(Json(serde_json::to_value(res).unwrap()))
+}
+
+async fn get_tenant_ledger(
+    State(state): State<ApiState>,
+    Path(tenant_id): Path<Uuid>,
+) -> Result<Json<serde_json::Value>, ApiError> {
+    let ledger = LedgerService::get_tenant_ledgers(&state.app.pool, tenant_id).await?;
+    Ok(Json(serde_json::to_value(ledger).unwrap()))
+}
+
+async fn list_receipts(State(state): State<ApiState>) -> Result<Json<serde_json::Value>, ApiError> {
+    let receipts = ReceiptService::list_receipts(&state.app.pool).await?;
+    Ok(Json(serde_json::to_value(receipts).unwrap()))
+}
+
+async fn get_receipt(
+    State(state): State<ApiState>,
+    Path(id): Path<Uuid>,
+) -> Result<Json<serde_json::Value>, ApiError> {
+    let receipt = ReceiptService::get_receipt(&state.app.pool, id).await?;
+    Ok(Json(serde_json::to_value(receipt).unwrap()))
+}
+
+async fn get_tenant_receipts(
+    State(state): State<ApiState>,
+    Path(tenant_id): Path<Uuid>,
+) -> Result<Json<serde_json::Value>, ApiError> {
+    let receipts = ReceiptService::get_tenant_receipts(&state.app.pool, tenant_id).await?;
+    Ok(Json(serde_json::to_value(receipts).unwrap()))
+}
+
+async fn run_reminders(State(state): State<ApiState>) -> Result<Json<serde_json::Value>, ApiError> {
+    let summary = ReminderEngine::run_reminder_cycle(&state.app.pool).await?;
+    Ok(Json(serde_json::to_value(summary).unwrap()))
+}
+
+async fn list_notifications(
+    State(state): State<ApiState>,
+) -> Result<Json<serde_json::Value>, ApiError> {
+    let notifications = ReminderEngine::list_notifications(&state.app.pool).await?;
+    Ok(Json(serde_json::to_value(notifications).unwrap()))
 }
 
 struct ApiError(String);

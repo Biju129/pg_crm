@@ -1,0 +1,8 @@
+C:\Users\Biju K\Desktop\pg_crm\target\debug\deps\percent_encoding-8f892177a1a6ce76.d: C:\Users\Biju\ K\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\percent-encoding-2.3.2\src\lib.rs C:\Users\Biju\ K\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\percent-encoding-2.3.2\src\ascii_set.rs
+
+C:\Users\Biju K\Desktop\pg_crm\target\debug\deps\libpercent_encoding-8f892177a1a6ce76.rlib: C:\Users\Biju\ K\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\percent-encoding-2.3.2\src\lib.rs C:\Users\Biju\ K\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\percent-encoding-2.3.2\src\ascii_set.rs
+
+C:\Users\Biju K\Desktop\pg_crm\target\debug\deps\libpercent_encoding-8f892177a1a6ce76.rmeta: C:\Users\Biju\ K\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\percent-encoding-2.3.2\src\lib.rs C:\Users\Biju\ K\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\percent-encoding-2.3.2\src\ascii_set.rs
+
+C:\Users\Biju\ K\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\percent-encoding-2.3.2\src\lib.rs:
+C:\Users\Biju\ K\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\percent-encoding-2.3.2\src\ascii_set.rs:
