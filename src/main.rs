@@ -20,19 +20,21 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     // Initialize database pool
     let pool = match create_pool(&config.database_url).await {
         Ok(pool) => {
-            println!(" Successfully connected to PostgreSQL database at {}", config.database_url);
+            println!("Successfully connected to PostgreSQL database at {}", config.database_url);
             pool
         }
         Err(err) => {
-            eprintln!(" Failed to connect to PostgreSQL database: {}", err);
-            eprintln!("   Please ensure PostgreSQL is running and credentials in .env are correct.");
-            eprintln!("   Default DATABASE_URL: postgres://postgres:postgres@localhost:5432/pg_crm_db");
+            eprintln!("Failed to connect to PostgreSQL database: {}", err);
+            eprintln!("Please ensure PostgreSQL is running and credentials in .env are correct.");
+            eprintln!("Default DATABASE_URL: postgres://postgres:postgres@localhost:5432/pg_crm_db");
             return Err(Box::new(err));
         }
     };
 
     // Run Desktop App
-    app::run_desktop_app(config, pool).await?;
+    app::run_desktop_app(config, pool)
+    .await
+    .map_err(|e| Box::new(e) as Box<dyn std::error::Error>)?;
 
     Ok(())
 }

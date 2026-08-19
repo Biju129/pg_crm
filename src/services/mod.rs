@@ -14,4 +14,4 @@ pub use ledger_service::LedgerService;
 pub use receipt_service::ReceiptService;
 pub use reminder_engine::ReminderEngine;
 pub use room_service::RoomService;
-pub use tenant_service::{ActivationResult, TenantService};
+pub use tenant_service::TenantService;
