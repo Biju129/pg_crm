@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PG CRM Desktop Application</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div>
+      <div class="brand">
+        <div class="brand-icon">PG</div>
+        <div class="brand-title">PG CRM</div>
+      </div>
+      <ul class="nav-list">
+        <li class="nav-item active" data-tab="guests">Guests Management</li>
+        <li class="nav-item" data-tab="rooms">Rooms & Occupancy</li>
+        <li class="nav-item" data-tab="auth">Users & Security</li>
+      </ul>
+    </div>
+    <div class="db-status">
+      <span class="status-dot"></span>
+      <span>PostgreSQL Active</span>
+    </div>
+  </aside>
+
+  <!-- Main Content Area -->
+  <main class="main-content">
+    <header class="header">
+      <h1 id="page-title">Guest Dashboard</h1>
+      <span style="color: var(--text-muted); font-size: 0.9rem;">Rust Desktop Engine v0.1.0</span>
+    </header>
+
+    <!-- Stats Row -->
+    <section class="stats-grid">
+      <div class="stat-card">
+        <span class="stat-label">Total Guests</span>
+        <span class="stat-value" id="stat-total-guests">0</span>
+      </div>
+      <div class="stat-card">
+        <span class="stat-label">Active Rooms</span>
+        <span class="stat-value" id="stat-active-rooms">0</span>
+      </div>
+      <div class="stat-card">
+        <span class="stat-label">Total Amount Due</span>
+        <span class="stat-value" id="stat-total-due">₹0.00</span>
+      </div>
+    </section>
+
+    <!-- TAB: GUESTS -->
+    <div id="tab-guests" class="tab-content">
+      <div class="grid-container">
+        <!-- Guest Form -->
+        <div class="card">
+          <h2 class="card-title" id="form-title">Add New Guest</h2>
+          <form id="guest-form">
+            <input type="hidden" id="guest-id">
+            <div class="form-group">
+              <label for="name">Guest Name</label>
+              <input type="text" id="name" placeholder="e.g. John Doe" required>
+            </div>
+            <div class="form-group">
+              <label for="roomNumber">Room Number</label>
+              <input type="text" id="roomNumber" placeholder="e.g. 101" required>
+            </div>
+            <div class="form-group">
+              <label for="phone">Phone Number</label>
+              <input type="text" id="phone" placeholder="e.g. +91 9876543210">
+            </div>
+            <div class="form-group">
+              <label for="monthlyRent">Monthly Rent (₹)</label>
+              <input type="number" id="monthlyRent" value="0">
+            </div>
+            <div class="form-group">
+              <label for="advanceAmount">Advance Paid (₹)</label>
+              <input type="number" id="advanceAmount" value="0">
+            </div>
+            <div class="form-group">
+              <label for="amountDue">Amount Due (₹)</label>
+              <input type="number" id="amountDue" value="0">
+            </div>
+            <div class="btn-group">
+              <button type="submit" class="btn btn-primary" id="save-btn">Save Guest</button>
+              <button type="button" class="btn btn-secondary" id="cancel-btn" style="display:none;">Cancel</button>
+            </div>
+          </form>
+        </div>
+
+        <!-- Guest List Table -->
+        <div class="card">
+          <h2 class="card-title">Guest Registry</h2>
+          <div class="table-responsive">
+            <table>
+              <thead>
+                <tr>
+                  <th>Name</th>
+                  <th>Room</th>
+                  <th>Phone</th>
+                  <th>Rent (₹)</th>
+                  <th>Due (₹)</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="guest-table-body">
+                <!-- Rows dynamically rendered -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB: ROOMS -->
+    <div id="tab-rooms" class="tab-content" style="display:none;">
+      <div class="grid-container">
+        <!-- Room Form -->
+        <div class="card">
+          <h2 class="card-title">Add Room</h2>
+          <form id="room-form">
+            <input type="hidden" id="room-id">
+            <div class="form-group">
+              <label for="room-number">Room Number</label>
+              <input type="text" id="room-number" placeholder="e.g. 201" required>
+            </div>
+            <div class="form-group">
+              <label for="room-capacity">Capacity</label>
+              <input type="number" id="room-capacity" value="2" min="1" required>
+            </div>
+            <div class="btn-group">
+              <button type="submit" class="btn btn-primary">Save Room</button>
+            </div>
+          </form>
+        </div>
+
+        <!-- Room List Table -->
+        <div class="card">
+          <h2 class="card-title">Rooms Overview</h2>
+          <div class="table-responsive">
+            <table>
+              <thead>
+                <tr>
+                  <th>Room No.</th>
+                  <th>Capacity</th>
+                  <th>Occupied</th>
+                  <th>Status</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="room-table-body">
+                <!-- Rows dynamically rendered -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB: AUTH -->
+    <div id="tab-auth" class="tab-content" style="display:none;">
+      <div class="card" style="max-width: 450px;">
+        <h2 class="card-title">User Registration & Security</h2>
+        <form id="user-form">
+          <div class="form-group">
+            <label for="user-name">Full Name</label>
+            <input type="text" id="user-name" placeholder="Admin Name" required>
+          </div>
+          <div class="form-group">
+            <label for="user-email">Email Address</label>
+            <input type="email" id="user-email" placeholder="admin@pgcrm.local" required>
+          </div>
+          <div class="form-group">
+            <label for="user-password">Password</label>
+            <input type="password" id="user-password" required>
+          </div>
+          <div class="form-group">
+            <label for="user-role">Role</label>
+            <select id="user-role">
+              <option value="admin">Admin</option>
+              <option value="caretaker">Caretaker</option>
+              <option value="guest">Guest</option>
+            </select>
+          </div>
+          <div class="btn-group">
+            <button type="submit" class="btn btn-primary">Create User</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>

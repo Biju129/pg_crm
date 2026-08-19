@@ -1,0 +1,24 @@
+[package]
+name = "pg_crm"
+version = "0.1.0"
+edition = "2021"
+authors = ["PG CRM Developer"]
+description = "Hostel / Paying Guest CRM Desktop Application with PostgreSQL"
+
+[dependencies]
+tokio = { version = "1.38", features = ["full"] }
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+sqlx = { version = "0.7", features = ["runtime-tokio-native-tls", "postgres", "uuid", "chrono", "bigdecimal", "migrate"] }
+axum = "0.7"
+tower-http = { version = "0.5", features = ["cors", "fs"] }
+uuid = { version = "1.8", features = ["v4", "serde"] }
+chrono = { version = "0.4", features = ["serde"] }
+dotenvy = "0.15"
+argon2 = "0.5"
+jsonwebtoken = "9.3"
+thiserror = "1.0"
+tracing = "0.1"
+tracing-subscriber = "0.3"
+
+[workspace]
