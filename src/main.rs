@@ -32,9 +32,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     };
 
     // Run Desktop App
-    app::run_desktop_app(config, pool)
-    .await
-    .map_err(|e| Box::new(e) as Box<dyn std::error::Error>)?;
+    app::run_desktop_app(config, pool).await?;
 
     Ok(())
 }

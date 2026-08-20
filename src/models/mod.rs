@@ -1,3 +1,6 @@
+// This suppresses the "unused import" warnings for models not yet wired up
+#![allow(unused_imports)]
+
 pub mod audit_log;
 pub mod enrollment_payment;
 pub mod guest;
