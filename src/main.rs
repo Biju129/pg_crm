@@ -27,7 +27,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
             eprintln!("Failed to connect to PostgreSQL database: {}", err);
             eprintln!("Please ensure PostgreSQL is running and credentials in .env are correct.");
             eprintln!("Default DATABASE_URL: postgres://postgres:postgres@localhost:5432/pg_crm_db");
-            return Err(Box::new(err));
+            return Err(err.into());
         }
     };
 

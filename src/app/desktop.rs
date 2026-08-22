@@ -1,5 +1,5 @@
 use crate::config::Config;
-use crate::db::run_migrations;
+// use crate::db::run_migrations;
 use crate::db::DbPool;
 use std::sync::Arc;
 
@@ -16,7 +16,7 @@ impl AppState {
 }
 
 pub async fn run_desktop_app(config: Config, pool: DbPool) -> Result<(), Box<dyn std::error::Error>> {
-    run_migrations(&pool).await?;
+    // run_migrations(&pool).await?;
 
     let state = Arc::new(AppState::new(pool, config.clone()));
 

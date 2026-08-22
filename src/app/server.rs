@@ -130,7 +130,13 @@ async fn register(
         }
     }
     // FIX: explicitly annotate the type so Rust knows what serde_json::to_value() is serializing
-    let auth: AuthResponse = AuthService::register(&state.app.pool, dto).await?;
+    let auth: AuthResponse = AuthService::register(
+        &state.app.pool,
+        dto,
+        &state.app.config.jwt_secret,
+        state.app.config.jwt_expires_in,
+    )
+    .await?;
     Ok(Json(serde_json::to_value(auth).unwrap()))
 }
 
@@ -166,7 +172,7 @@ async fn create_room(
     State(state): State<ApiState>,
     Json(dto): Json<CreateRoomDto>,
 ) -> Result<Json<serde_json::Value>, ApiError> {
-    let room: RoomResponse = RoomService::create_room(&state.app.pool, dto).await?;
+    let room = RoomService::create_room(&state.app.pool, dto).await?;
     Ok(Json(serde_json::to_value(room).unwrap()))
 }
 
@@ -176,8 +182,8 @@ async fn update_room(
     Path(id): Path<Uuid>,
     Json(dto): Json<UpdateRoomDto>,
 ) -> Result<Json<serde_json::Value>, ApiError> {
-    // Returns Option<RoomResponse> — Some if found and updated, None if not found
-    let room: Option<RoomResponse> = RoomService::update_room(&state.app.pool, id, dto).await?;
+    // Some if found and updated, None if not found
+    let room = RoomService::update_room(&state.app.pool, id, dto).await?;
     Ok(Json(serde_json::json!({ "updated": room.is_some(), "room": room })))
 }
 
@@ -214,7 +220,7 @@ async fn get_guest(
     State(state): State<ApiState>,
     Path(id): Path<Uuid>,
 ) -> Result<Json<serde_json::Value>, ApiError> {
-    let guest: Guest = GuestService::get_guest(&state.app.pool, id).await?;
+    let guest = GuestService::get_guest(&state.app.pool, id).await?;
     Ok(Json(serde_json::to_value(guest).unwrap()))
 }
 
@@ -224,7 +230,7 @@ async fn update_guest(
     Path(id): Path<Uuid>,
     Json(dto): Json<UpdateGuestDto>,
 ) -> Result<Json<serde_json::Value>, ApiError> {
-    let guest: Guest = GuestService::update_guest(&state.app.pool, id, dto).await?;
+    let guest = GuestService::update_guest(&state.app.pool, id, dto).await?;
     Ok(Json(serde_json::to_value(guest).unwrap()))
 }
 
@@ -337,7 +343,7 @@ async fn pay_rent(
     State(state): State<ApiState>,
     Json(dto): Json<PayRentDto>,
 ) -> Result<Json<serde_json::Value>, ApiError> {
-    let res: RentLedger = LedgerService::pay_rent(&state.app.pool, dto).await?;
+    let res = LedgerService::pay_rent(&state.app.pool, dto).await?;
     Ok(Json(serde_json::to_value(res).unwrap()))
 }
 

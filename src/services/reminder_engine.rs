@@ -1,7 +1,7 @@
 use crate::db::DbPool;
 use crate::models::notification::Notification;
 use crate::repository::{NotificationRepository, RentLedgerRepository, TenantRepository};
-use chrono::{Datelike, Utc};
+use chrono::Utc;
 use serde::Serialize;
 
 pub struct ReminderEngine;
